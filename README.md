@@ -48,7 +48,7 @@ All raw content — including PII — stays inside the company network. **Redact
 - Multi-channel capture: WebUI, WhatsApp, Telegram, email, REST/MCP.
 - Local LLMs (Ollama + Qwen / Llama) for classification, tagging, summarization, embeddings, and answer generation.
 - GraphRAG mesh via **LightRAG** + **pgvector** for hybrid semantic + graph retrieval.
-- **Egress-only PII redaction** via Microsoft Presidio with custom HK recognizers (HKID, MRN, HK phone).
+- **Egress-only PII & sensitive-data redaction** via Microsoft Presidio. Covers (a) global PII — person names, emails, phone numbers, postal addresses, dates of birth, IPs, URLs; (b) government IDs — passport, US SSN, UK NINO, EU national IDs, etc.; (c) **payment / PCI data** — credit/debit card PAN (Visa/Mastercard/Amex/Discover/JCB/UnionPay, Luhn-validated), CVV/CVC, expiry, IBAN, SWIFT/BIC, bank account/routing numbers, crypto wallet addresses; (d) **credentials & secrets** — API keys, JWTs, AWS/GCP/Azure access keys, private keys, OAuth tokens; (e) **medical/health** — MRN, ICD/CPT codes, health record numbers; (f) **regional packs** including HK (HKID, HK phone +852, HK address), with pluggable packs for SG NRIC, CN ID, TW ID, JP MyNumber, etc.
 - Admin portal for review, re-categorization, mesh editing, taxonomy management.
 - Universal MCP gateway for all AI agents.
 - Zero internet egress on the RAG subnet; Tailscale for private access.
@@ -277,7 +277,7 @@ flowchart LR
 | Embeddings | bge-m3 | Multilingual EN/中文 |
 | Vector DB | PostgreSQL + pgvector | Hybrid retrieval |
 | Graph RAG | LightRAG | Mesh / entity reasoning |
-| PII Egress Filter | Microsoft Presidio + custom HK recognizers | Redaction at boundary only |
+| PII / Sensitive-Data Egress Filter | Microsoft Presidio + global recognizers + payment-card / secrets / regional packs | Redaction at boundary only; covers global PII, PCI (PAN/CVV/IBAN/SWIFT), credentials, health, and regional IDs |
 | File Storage | Encrypted blob store on VM-host | At-rest protection |
 | Networking | Tailscale | Private device access |
 | Versioning | Gitea (optional) | Audit trail |
@@ -293,7 +293,13 @@ flowchart LR
 - **TLS everywhere**: mTLS between containers; Tailscale for client access.
 - **RBAC**: roles (admin, hr, finance, it, general, external_agent) gate redaction and node visibility.
 - **Audit log**: every query records caller, role, channel, redaction_applied, sources.
-- **Custom HK recognizers**: HKID, hospital MRN, HK phone (+852, 8 digits), HK address.
+- **Recognizer coverage** (Presidio analyzer + custom packs):
+  - **Global PII**: PERSON, EMAIL_ADDRESS, PHONE_NUMBER, LOCATION, DATE_TIME (DOB), IP_ADDRESS, URL, NRP.
+  - **Government IDs**: US_SSN, US_DRIVER_LICENSE, US_PASSPORT, US_ITIN, UK_NHS, UK_NINO, AU_TFN, AU_MEDICARE, IN_AADHAAR, IN_PAN, ES_NIF, IT_FISCAL_CODE, SG_NRIC_FIN, plus EU national IDs.
+  - **Payment / PCI**: CREDIT_CARD (Luhn-checked across Visa, Mastercard, Amex, Discover, JCB, Diners, UnionPay), CVV/CVC, card expiry, IBAN, SWIFT/BIC, US bank account + ABA routing, SEPA references, common crypto wallet addresses (BTC, ETH).
+  - **Credentials & secrets**: API_KEY (generic high-entropy), JWT, AWS_ACCESS_KEY / AWS_SECRET, GCP_SERVICE_ACCOUNT, AZURE_KEY, PRIVATE_KEY (PEM), OAuth bearer tokens, Slack/GitHub/Stripe tokens.
+  - **Health**: MEDICAL_LICENSE, MRN, ICD-10/CPT codes, health record numbers.
+  - **Regional packs**: HK (HKID with checksum, HK phone +852/8-digit, HK address); CN ID; TW ID; JP MyNumber; SG NRIC/FIN; pluggable for other locales.
 - **Air-gap option**: stack runs without internet; models updated via sneakernet.
 
 ***
