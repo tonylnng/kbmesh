@@ -99,9 +99,14 @@ All raw content — including PII — stays inside the company network. **Redact
 
 ### Visual Architecture
 
-![KBMesh Architecture](docs/assets/kbmesh_architecture.png)
+![KBMesh Architecture — animated](docs/assets/kbmesh_architecture.gif)
 
-**Animated version:** [docs/assets/kbmesh_architecture.svg](docs/assets/kbmesh_architecture.svg) — open in a browser to see data packets streaming up the stack (Sources → Ingest → Knowledge Mesh → AI Agents → Access → Users), the mesh pulsing, agents breathing in sequence, the PII scan stripe flashing, and the governance rail glowing in a wave. Self-contained SVG, no external assets.
+Knowledge flows up the stack: **Sources → Ingest → Knowledge Mesh → AI Agents → Access → Users**, with the governance rail (PII rules, RBAC, audit, model routing, freshness) on the right and the model/token layer at the bottom. The animation shows data packets streaming through each band, the mesh pulsing, agents breathing, and the PII scan stripe flashing.
+
+**Other formats:**
+- [kbmesh_architecture.svg](docs/assets/kbmesh_architecture.svg) — vector source, animates natively in any browser (29 KB, self-contained)
+- [kbmesh_architecture.mp4](docs/assets/kbmesh_architecture.mp4) — H.264 video for slide decks (287 KB)
+- [kbmesh_architecture.png](docs/assets/kbmesh_architecture.png) — static still for documents that can't render motion
 
 ***
 
