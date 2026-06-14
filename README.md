@@ -57,44 +57,78 @@ All raw content — including PII — stays inside the company network. **Redact
 
 ## 2. Architecture Overview
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│  COMPANY LAN — KBMesh Trust Boundary (no public egress)         │
-│                                                                 │
-│  Channels                                                       │
-│   ├─ WebUI (PWA)                                                │
-│   ├─ WhatsApp Bridge                                            │
-│   ├─ Telegram Bridge                                            │
-│   ├─ Email (IMAP via n8n)                                       │
-│   └─ REST / MCP API                                             │
-│                  │                                              │
-│                  ▼                                              │
-│           MCP Gateway (Fastify) ◄──── Egress filter (Presidio)  │
-│                  │                                              │
-│        ┌─────────┼─────────┐                                    │
-│        ▼         ▼         ▼                                    │
-│   Ingestion   Query      Admin                                  │
-│   Pipeline    Engine     Portal API                             │
-│        │         │         │                                    │
-│        ▼         ▼         ▼                                    │
-│  ┌─────────────────────────────────────────────┐                │
-│  │  Local LLM (Ollama)                         │                │
-│  │   • bge-m3 (embeddings)                     │                │
-│  │   • qwen2.5:7b (classify / tag / summarize) │                │
-│  │   • qwen2.5:32b (answer generation)         │                │
-│  └─────────────────────────────────────────────┘                │
-│        │                                                        │
-│        ▼                                                        │
-│  ┌─────────────────────────────────────────────┐                │
-│  │  Storage Layer (encrypted at rest)          │                │
-│  │   • PostgreSQL (nodes, edges, audit)        │                │
-│  │   • pgvector (embeddings)                   │                │
-│  │   • LightRAG (graph mesh)                   │                │
-│  │   • file_blobs (encrypted file store)       │                │
-│  └─────────────────────────────────────────────┘                │
-│                                                                 │
-│  Orchestration: n8n   |   Networking: Tailscale                 │
-└─────────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TB
+  classDef boundary fill:#FAF7F0,stroke:#28251D,stroke-width:2px,color:#28251D
+  classDef channel fill:#FFFFFF,stroke:#7A7974,color:#28251D
+  classDef gateway fill:#01696F,stroke:#013F43,color:#FFFFFF
+  classDef pipeline fill:#FFFFFF,stroke:#01696F,color:#28251D
+  classDef llm fill:#1B474D,stroke:#01696F,color:#FFFFFF
+  classDef storage fill:#A84B2F,stroke:#6E2A18,color:#FFFFFF
+  classDef egress fill:#6E522B,stroke:#3F2E16,color:#FFFFFF
+  classDef infra fill:#F0EAD9,stroke:#6E522B,color:#28251D
+
+  subgraph LAN["COMPANY LAN &mdash; KBMesh Trust Boundary (no public egress)"]
+    direction TB
+
+    subgraph CH["Channels"]
+      direction LR
+      WEB["WebUI (PWA)"]:::channel
+      WA["WhatsApp Bridge"]:::channel
+      TG["Telegram Bridge"]:::channel
+      EM["Email (IMAP via n8n)"]:::channel
+      API["REST / MCP API"]:::channel
+    end
+
+    GW["MCP Gateway (Fastify)"]:::gateway
+    PR["Egress filter &mdash; Presidio<br/>PII / PCI / secrets / health"]:::egress
+
+    subgraph SVC["Services"]
+      direction LR
+      ING["Ingestion<br/>Pipeline"]:::pipeline
+      QRY["Query<br/>Engine"]:::pipeline
+      ADM["Admin<br/>Portal API"]:::pipeline
+    end
+
+    subgraph LLM["Local LLM &mdash; Ollama"]
+      direction TB
+      E1["bge-m3 &mdash; embeddings"]:::llm
+      E2["qwen2.5:7b &mdash; classify / tag / summarize"]:::llm
+      E3["qwen2.5:32b &mdash; answer generation"]:::llm
+    end
+
+    subgraph STORE["Storage Layer &mdash; encrypted at rest"]
+      direction TB
+      PG["PostgreSQL &mdash; nodes, edges, audit"]:::storage
+      VEC["pgvector &mdash; embeddings"]:::storage
+      LRAG["LightRAG &mdash; graph mesh"]:::storage
+      BLOB["file_blobs &mdash; encrypted file store"]:::storage
+    end
+
+    INFRA["Orchestration: n8n &nbsp;&bull;&nbsp; Networking: Tailscale"]:::infra
+
+    WEB --> GW
+    WA --> GW
+    TG --> GW
+    EM --> GW
+    API --> GW
+
+    GW <-->|"applied at egress only"| PR
+    GW --> ING
+    GW --> QRY
+    GW --> ADM
+
+    ING --> LLM
+    QRY --> LLM
+    ADM --> LLM
+    LLM --> STORE
+    ING -.-> STORE
+    QRY -.-> STORE
+
+    STORE --- INFRA
+  end
+
+  class LAN boundary
 ```
 
 ### Visual Architecture
