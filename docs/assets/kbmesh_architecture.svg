@@ -1,0 +1,519 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1260 920" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">KBMesh — animated architecture</title>
+  <desc id="d">Knowledge flows up from sources through the ingest pipeline into the knowledge mesh, where AI agents retrieve and answer for users. Governance rail and model layer support the stack.</desc>
+
+  <!-- ============ TOKENS ============ -->
+  <defs>
+    <style>
+      .ink   { fill: #28251D; }
+      .muted { fill: #7A7974; }
+      .white { fill: #ffffff; }
+
+      .band-title { font-weight: 700; letter-spacing: 0.04em; }
+      .tile-title { font-weight: 700; }
+      .tile-sub   { font-size: 11px; }
+      .arrow-lbl  { font-size: 11px; fill: #7A7974; font-style: italic; }
+
+      /* Pulse on the heart of the system (knowledge mesh band) */
+      @keyframes meshPulse {
+        0%, 100% { filter: drop-shadow(0 0 0 rgba(168,75,47,0)); }
+        50%      { filter: drop-shadow(0 0 18px rgba(168,75,47,0.45)); }
+      }
+      .mesh-band { animation: meshPulse 4.2s ease-in-out infinite; transform-origin: center; }
+
+      /* Subtle scale pulse on AI agents to suggest "thinking" */
+      @keyframes agentBreathe {
+        0%, 100% { opacity: 1; }
+        50%      { opacity: 0.85; }
+      }
+      .agent-card { animation: agentBreathe 3s ease-in-out infinite; }
+      .agent-card:nth-of-type(1) { animation-delay: 0s; }
+      .agent-card:nth-of-type(2) { animation-delay: 0.3s; }
+      .agent-card:nth-of-type(3) { animation-delay: 0.6s; }
+      .agent-card:nth-of-type(4) { animation-delay: 0.9s; }
+
+      /* PII scan blink to show it's actively gatekeeping */
+      @keyframes piiBlink {
+        0%, 75%, 100% { fill: #A84B2F; }
+        85%           { fill: #E89B82; }
+      }
+      .pii-stripe { animation: piiBlink 2.6s ease-in-out infinite; }
+
+      /* Governance items glow softly in sequence */
+      @keyframes govGlow {
+        0%, 100% { stroke: #D4D1CA; stroke-width: 1; }
+        50%      { stroke: #6E522B; stroke-width: 2; }
+      }
+      .gov-card { animation: govGlow 5s ease-in-out infinite; }
+      .gov-card:nth-of-type(1) { animation-delay: 0s; }
+      .gov-card:nth-of-type(2) { animation-delay: 1s; }
+      .gov-card:nth-of-type(3) { animation-delay: 2s; }
+      .gov-card:nth-of-type(4) { animation-delay: 3s; }
+      .gov-card:nth-of-type(5) { animation-delay: 4s; }
+
+      /* Spine arrows breathe to draw the eye to the upward flow */
+      @keyframes flowFade {
+        0%, 100% { opacity: 0.55; }
+        50%      { opacity: 1; }
+      }
+      .flow-arrow { animation: flowFade 2s ease-in-out infinite; }
+    </style>
+
+    <!-- Arrowheads -->
+    <marker id="arrow-terra" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#A84B2F"/>
+    </marker>
+    <marker id="arrow-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#01696F"/>
+    </marker>
+    <marker id="arrow-teal-back" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M10,0 L0,5 L10,10 z" fill="#01696F"/>
+    </marker>
+    <marker id="arrow-gov" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#6E522B"/>
+    </marker>
+    <marker id="arrow-model" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1B474D"/>
+    </marker>
+
+    <!-- Soft drop shadow for cards -->
+    <filter id="card-shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="1" stdDeviation="1.5" flood-color="#28251D" flood-opacity="0.08"/>
+    </filter>
+
+    <!-- Reusable: data packet (small dot that flows along a path) -->
+    <symbol id="packet-terra" overflow="visible">
+      <circle r="5" fill="#A84B2F"/>
+      <circle r="5" fill="#A84B2F" opacity="0.35">
+        <animate attributeName="r" values="5;10;5" dur="1.4s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.35;0;0.35" dur="1.4s" repeatCount="indefinite"/>
+      </circle>
+    </symbol>
+    <symbol id="packet-teal" overflow="visible">
+      <circle r="5" fill="#01696F"/>
+      <circle r="5" fill="#01696F" opacity="0.35">
+        <animate attributeName="r" values="5;10;5" dur="1.4s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.35;0;0.35" dur="1.4s" repeatCount="indefinite"/>
+      </circle>
+    </symbol>
+  </defs>
+
+  <!-- ============ BACKGROUND ============ -->
+  <rect width="1260" height="920" fill="#FBFAF6"/>
+
+  <!-- Title -->
+  <text x="630" y="46" text-anchor="middle" font-size="28" font-weight="700" class="ink">KBMesh — how it works</text>
+  <text x="630" y="74" text-anchor="middle" font-size="13" class="muted">Knowledge flows up from sources, through the mesh, into AI agents that answer your team — with PII guardrails throughout.</text>
+
+  <!-- On-prem perimeter -->
+  <rect x="22" y="98" width="1216" height="780" rx="14" fill="none" stroke="#7A7974" stroke-dasharray="6 4" stroke-width="1.1" opacity="0.55"/>
+  <text x="36" y="92" font-size="11" class="muted" font-style="italic">On-premise perimeter — nothing leaves the company network without approval</text>
+
+  <!-- ============ LAYOUT CONSTANTS ============
+       Core column: x = 40..1000  (width 960)
+       Side rail:   x = 1020..1240 (width 220)
+       Title strip inside each band: first 130px is the dark title area.
+       Tile area begins at x = 200 (CORE_L + TITLE_W).
+  =================================================== -->
+
+  <!-- =========================================================
+       1. SOURCES BAND  (y = 120..192)
+       ========================================================= -->
+  <g id="sources">
+    <rect x="40" y="120" width="960" height="72" rx="10" fill="#6B6B66"/>
+    <text x="120" y="161" text-anchor="middle" font-size="15" class="band-title white">SOURCES</text>
+
+    <!-- 5 source tiles -->
+    <g filter="url(#card-shadow)">
+      <rect x="208"  y="130" width="148" height="52" rx="8" fill="#ffffff"/>
+      <text x="282"  y="152" text-anchor="middle" font-size="13" class="tile-title ink">Git</text>
+      <text x="282"  y="170" text-anchor="middle" class="tile-sub muted">code · PRs · commits</text>
+
+      <rect x="368"  y="130" width="148" height="52" rx="8" fill="#ffffff"/>
+      <text x="442"  y="152" text-anchor="middle" font-size="13" class="tile-title ink">Confluence</text>
+      <text x="442"  y="170" text-anchor="middle" class="tile-sub muted">wiki · specs</text>
+
+      <rect x="528"  y="130" width="148" height="52" rx="8" fill="#ffffff"/>
+      <text x="602"  y="152" text-anchor="middle" font-size="13" class="tile-title ink">Jira / Linear</text>
+      <text x="602"  y="170" text-anchor="middle" class="tile-sub muted">tickets · decisions</text>
+
+      <rect x="688"  y="130" width="148" height="52" rx="8" fill="#ffffff"/>
+      <text x="762"  y="152" text-anchor="middle" font-size="13" class="tile-title ink">SharePoint</text>
+      <text x="762"  y="170" text-anchor="middle" class="tile-sub muted">policies · docs</text>
+
+      <rect x="848"  y="130" width="148" height="52" rx="8" fill="#ffffff"/>
+      <text x="922"  y="152" text-anchor="middle" font-size="13" class="tile-title ink">Meetings</text>
+      <text x="922"  y="170" text-anchor="middle" class="tile-sub muted">Teams / Zoom</text>
+    </g>
+  </g>
+
+  <!-- =========================================================
+       2. INGEST PIPELINE  (y = 240..320)
+       ========================================================= -->
+  <g id="ingest">
+    <rect x="40" y="240" width="960" height="80" rx="10" fill="#0C4E54"/>
+    <text x="120" y="276" text-anchor="middle" font-size="15" class="band-title white">INGEST</text>
+    <text x="120" y="294" text-anchor="middle" font-size="13" class="band-title white">PIPELINE</text>
+
+    <!-- 4 steps with PII as step 1 (animated stripe) -->
+    <g filter="url(#card-shadow)">
+      <rect x="208" y="252" width="186" height="56" rx="8" fill="#ffffff"/>
+      <rect x="208" y="252" width="6"   height="56" rx="2" class="pii-stripe"/>
+      <text x="304" y="274" text-anchor="middle" font-size="13" class="tile-title ink">1.  PII / secret scan</text>
+      <text x="304" y="292" text-anchor="middle" class="tile-sub muted">HKID · credit card · keys</text>
+
+      <rect x="408" y="252" width="186" height="56" rx="8" fill="#ffffff"/>
+      <rect x="408" y="252" width="6"   height="56" rx="2" fill="#01696F"/>
+      <text x="504" y="274" text-anchor="middle" font-size="13" class="tile-title ink">2.  Chunk</text>
+      <text x="504" y="292" text-anchor="middle" class="tile-sub muted">split into meaningful blocks</text>
+
+      <rect x="608" y="252" width="186" height="56" rx="8" fill="#ffffff"/>
+      <rect x="608" y="252" width="6"   height="56" rx="2" fill="#01696F"/>
+      <text x="704" y="274" text-anchor="middle" font-size="13" class="tile-title ink">3.  Embed</text>
+      <text x="704" y="292" text-anchor="middle" class="tile-sub muted">turn into vectors</text>
+
+      <rect x="808" y="252" width="186" height="56" rx="8" fill="#ffffff"/>
+      <rect x="808" y="252" width="6"   height="56" rx="2" fill="#01696F"/>
+      <text x="904" y="274" text-anchor="middle" font-size="13" class="tile-title ink">4.  Link</text>
+      <text x="904" y="292" text-anchor="middle" class="tile-sub muted">connect to the graph</text>
+
+      <!-- tiny step arrows between ingest tiles -->
+      <line x1="394" y1="280" x2="408" y2="280" stroke="#0C4E54" stroke-width="1.6" marker-end="url(#arrow-teal)"/>
+      <line x1="594" y1="280" x2="608" y2="280" stroke="#0C4E54" stroke-width="1.6" marker-end="url(#arrow-teal)"/>
+      <line x1="794" y1="280" x2="808" y2="280" stroke="#0C4E54" stroke-width="1.6" marker-end="url(#arrow-teal)"/>
+    </g>
+  </g>
+
+  <!-- =========================================================
+       3. KNOWLEDGE MESH (heart)  (y = 370..470)
+       ========================================================= -->
+  <g id="mesh" class="mesh-band">
+    <rect x="40" y="370" width="960" height="100" rx="12" fill="#A84B2F"/>
+    <text x="120" y="416" text-anchor="middle" font-size="15" class="band-title white">KNOWLEDGE</text>
+    <text x="120" y="434" text-anchor="middle" font-size="15" class="band-title white">MESH</text>
+
+    <!-- Vector store -->
+    <g filter="url(#card-shadow)">
+      <rect x="208" y="384" width="376" height="72" rx="10" fill="#ffffff"/>
+      <text x="396" y="406" text-anchor="middle" font-size="14" class="tile-title" fill="#A84B2F">Vector store</text>
+      <text x="396" y="424" text-anchor="middle" font-size="11" class="ink">Every document chunked into meaning-rich pieces.</text>
+      <text x="396" y="440" text-anchor="middle" font-size="11" class="muted">Semantic search across millions of passages.</text>
+    </g>
+
+    <!-- Knowledge graph -->
+    <g filter="url(#card-shadow)">
+      <rect x="600" y="384" width="394" height="72" rx="10" fill="#ffffff"/>
+      <text x="797" y="406" text-anchor="middle" font-size="14" class="tile-title" fill="#A84B2F">Knowledge graph</text>
+      <text x="797" y="424" text-anchor="middle" font-size="11" class="ink">"A depends on B", "policy X supersedes Y".</text>
+      <text x="797" y="440" text-anchor="middle" font-size="11" class="muted">Answers "what breaks if I delete this?"</text>
+    </g>
+
+    <!-- tiny graph nodes animation -->
+    <g opacity="0.85">
+      <circle cx="630" cy="402" r="3" fill="#A84B2F">
+        <animate attributeName="opacity" values="0.4;1;0.4" dur="1.8s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="650" cy="416" r="3" fill="#A84B2F">
+        <animate attributeName="opacity" values="0.4;1;0.4" dur="1.8s" begin="0.6s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="640" cy="430" r="3" fill="#A84B2F">
+        <animate attributeName="opacity" values="0.4;1;0.4" dur="1.8s" begin="1.2s" repeatCount="indefinite"/>
+      </circle>
+      <line x1="630" y1="402" x2="650" y2="416" stroke="#A84B2F" stroke-width="0.8" opacity="0.6"/>
+      <line x1="650" y1="416" x2="640" y2="430" stroke="#A84B2F" stroke-width="0.8" opacity="0.6"/>
+      <line x1="630" y1="402" x2="640" y2="430" stroke="#A84B2F" stroke-width="0.8" opacity="0.6"/>
+    </g>
+  </g>
+
+  <!-- =========================================================
+       4. AI AGENTS  (y = 510..610)
+       ========================================================= -->
+  <g id="agents">
+    <rect x="40" y="510" width="960" height="100" rx="10" fill="#01696F"/>
+    <text x="120" y="556" text-anchor="middle" font-size="15" class="band-title white">AI</text>
+    <text x="120" y="574" text-anchor="middle" font-size="15" class="band-title white">AGENTS</text>
+
+    <g class="agent-card" filter="url(#card-shadow)">
+      <rect x="208" y="524" width="180" height="72" rx="10" fill="#ffffff"/>
+      <text x="298" y="548" text-anchor="middle" font-size="13" class="tile-title" fill="#01696F">Q&amp;A agent</text>
+      <text x="298" y="568" text-anchor="middle" font-size="11" class="ink">Cited answers from</text>
+      <text x="298" y="582" text-anchor="middle" font-size="11" class="ink">your own knowledge</text>
+    </g>
+
+    <g class="agent-card" filter="url(#card-shadow)">
+      <rect x="402" y="524" width="180" height="72" rx="10" fill="#ffffff"/>
+      <text x="492" y="548" text-anchor="middle" font-size="13" class="tile-title" fill="#01696F">Audit agent</text>
+      <text x="492" y="568" text-anchor="middle" font-size="11" class="ink">Per-answer trace</text>
+      <text x="492" y="582" text-anchor="middle" font-size="11" class="ink">for compliance</text>
+    </g>
+
+    <g class="agent-card" filter="url(#card-shadow)">
+      <rect x="596" y="524" width="180" height="72" rx="10" fill="#ffffff"/>
+      <text x="686" y="548" text-anchor="middle" font-size="13" class="tile-title" fill="#01696F">Drafting agent</text>
+      <text x="686" y="568" text-anchor="middle" font-size="11" class="ink">Release notes,</text>
+      <text x="686" y="582" text-anchor="middle" font-size="11" class="ink">specs, runbooks</text>
+    </g>
+
+    <g class="agent-card" filter="url(#card-shadow)">
+      <rect x="790" y="524" width="180" height="72" rx="10" fill="#ffffff"/>
+      <text x="880" y="548" text-anchor="middle" font-size="13" class="tile-title" fill="#01696F">Review agent</text>
+      <text x="880" y="568" text-anchor="middle" font-size="11" class="ink">Contradictions,</text>
+      <text x="880" y="582" text-anchor="middle" font-size="11" class="ink">PII checks, freshness</text>
+    </g>
+  </g>
+
+  <!-- =========================================================
+       5. ACCESS  (y = 650..710)
+       ========================================================= -->
+  <g id="access">
+    <rect x="40" y="650" width="960" height="60" rx="10" fill="#5B5B57"/>
+    <text x="120" y="685" text-anchor="middle" font-size="15" class="band-title white">ACCESS</text>
+
+    <g filter="url(#card-shadow)">
+      <rect x="208" y="660" width="244" height="40" rx="8" fill="#ffffff"/>
+      <text x="330" y="678" text-anchor="middle" font-size="13" class="tile-title ink">Chat UI</text>
+      <text x="330" y="694" text-anchor="middle" class="tile-sub muted">browser</text>
+
+      <rect x="466" y="660" width="244" height="40" rx="8" fill="#ffffff"/>
+      <text x="588" y="678" text-anchor="middle" font-size="13" class="tile-title ink">IDE plug-in</text>
+      <text x="588" y="694" text-anchor="middle" class="tile-sub muted">VS Code · JetBrains</text>
+
+      <rect x="724" y="660" width="270" height="40" rx="8" fill="#ffffff"/>
+      <text x="859" y="678" text-anchor="middle" font-size="13" class="tile-title ink">REST / MCP API</text>
+      <text x="859" y="694" text-anchor="middle" class="tile-sub muted">automations</text>
+    </g>
+  </g>
+
+  <!-- =========================================================
+       6. USERS  (y = 750..810)
+       ========================================================= -->
+  <g id="users">
+    <rect x="40" y="750" width="960" height="60" rx="10" fill="#6B6B66"/>
+    <text x="120" y="785" text-anchor="middle" font-size="15" class="band-title white">USERS</text>
+
+    <g filter="url(#card-shadow)">
+      <rect x="208" y="760" width="148" height="40" rx="8" fill="#ffffff"/>
+      <text x="282" y="778" text-anchor="middle" font-size="13" class="tile-title ink">Developers</text>
+      <text x="282" y="794" text-anchor="middle" class="tile-sub muted">code · specs</text>
+
+      <rect x="368" y="760" width="148" height="40" rx="8" fill="#ffffff"/>
+      <text x="442" y="778" text-anchor="middle" font-size="13" class="tile-title ink">Product mgrs</text>
+      <text x="442" y="794" text-anchor="middle" class="tile-sub muted">decisions</text>
+
+      <rect x="528" y="760" width="148" height="40" rx="8" fill="#ffffff"/>
+      <text x="602" y="778" text-anchor="middle" font-size="13" class="tile-title ink">Ops</text>
+      <text x="602" y="794" text-anchor="middle" class="tile-sub muted">runbooks</text>
+
+      <rect x="688" y="760" width="148" height="40" rx="8" fill="#ffffff"/>
+      <text x="762" y="778" text-anchor="middle" font-size="13" class="tile-title ink">Compliance</text>
+      <text x="762" y="794" text-anchor="middle" class="tile-sub muted">audits</text>
+
+      <rect x="848" y="760" width="148" height="40" rx="8" fill="#ffffff"/>
+      <text x="922" y="778" text-anchor="middle" font-size="13" class="tile-title ink">Management</text>
+      <text x="922" y="794" text-anchor="middle" class="tile-sub muted">reports</text>
+    </g>
+  </g>
+
+  <!-- =========================================================
+       MODEL LAYER  (y = 832..876)  — at the bottom
+       ========================================================= -->
+  <g id="model">
+    <rect x="40" y="832" width="960" height="44" rx="10" fill="#1B474D"/>
+    <text x="120" y="860" text-anchor="middle" font-size="13" class="band-title white">MODEL LAYER</text>
+
+    <g>
+      <rect x="208" y="840" width="186" height="28" rx="6" fill="#244F54"/>
+      <text x="301" y="859" text-anchor="middle" font-size="12" class="tile-title white">GPT-4o-mini · cheap</text>
+
+      <rect x="408" y="840" width="186" height="28" rx="6" fill="#244F54"/>
+      <text x="501" y="859" text-anchor="middle" font-size="12" class="tile-title white">Claude Sonnet · reasoning</text>
+
+      <rect x="608" y="840" width="186" height="28" rx="6" fill="#244F54"/>
+      <text x="701" y="859" text-anchor="middle" font-size="12" class="tile-title white">Local Llama · on-prem</text>
+
+      <rect x="808" y="840" width="186" height="28" rx="6" fill="#244F54"/>
+      <text x="901" y="859" text-anchor="middle" font-size="12" class="tile-title white">Embedding model</text>
+    </g>
+  </g>
+
+  <!-- =========================================================
+       GOVERNANCE side rail  (x = 1020..1240, y = 120..810)
+       ========================================================= -->
+  <g id="governance">
+    <rect x="1020" y="120" width="220" height="690" rx="12" fill="#6E522B"/>
+    <text x="1130" y="148" text-anchor="middle" font-size="14" class="band-title white">GOVERNANCE</text>
+
+    <g class="gov-card">
+      <rect x="1036" y="168" width="188" height="118" rx="8" fill="#ffffff" stroke="#D4D1CA"/>
+      <text x="1130" y="194" text-anchor="middle" font-size="13" class="tile-title" fill="#6E522B">PII rules</text>
+      <text x="1130" y="218" text-anchor="middle" font-size="11" class="ink">Mask, drop or flag</text>
+      <text x="1130" y="234" text-anchor="middle" font-size="11" class="ink">sensitive data at</text>
+      <text x="1130" y="250" text-anchor="middle" font-size="11" class="ink">ingest and egress.</text>
+    </g>
+
+    <g class="gov-card">
+      <rect x="1036" y="298" width="188" height="118" rx="8" fill="#ffffff" stroke="#D4D1CA"/>
+      <text x="1130" y="324" text-anchor="middle" font-size="13" class="tile-title" fill="#6E522B">RBAC</text>
+      <text x="1130" y="348" text-anchor="middle" font-size="11" class="ink">Every team sees</text>
+      <text x="1130" y="364" text-anchor="middle" font-size="11" class="ink">only what its role</text>
+      <text x="1130" y="380" text-anchor="middle" font-size="11" class="ink">permits.</text>
+    </g>
+
+    <g class="gov-card">
+      <rect x="1036" y="428" width="188" height="118" rx="8" fill="#ffffff" stroke="#D4D1CA"/>
+      <text x="1130" y="454" text-anchor="middle" font-size="13" class="tile-title" fill="#6E522B">Audit log</text>
+      <text x="1130" y="478" text-anchor="middle" font-size="11" class="ink">Every question,</text>
+      <text x="1130" y="494" text-anchor="middle" font-size="11" class="ink">every answer,</text>
+      <text x="1130" y="510" text-anchor="middle" font-size="11" class="ink">every source.</text>
+    </g>
+
+    <g class="gov-card">
+      <rect x="1036" y="558" width="188" height="118" rx="8" fill="#ffffff" stroke="#D4D1CA"/>
+      <text x="1130" y="584" text-anchor="middle" font-size="13" class="tile-title" fill="#6E522B">Model routing</text>
+      <text x="1130" y="608" text-anchor="middle" font-size="11" class="ink">Cheap model for</text>
+      <text x="1130" y="624" text-anchor="middle" font-size="11" class="ink">lookups; premium</text>
+      <text x="1130" y="640" text-anchor="middle" font-size="11" class="ink">for reasoning.</text>
+    </g>
+
+    <g class="gov-card">
+      <rect x="1036" y="688" width="188" height="108" rx="8" fill="#ffffff" stroke="#D4D1CA"/>
+      <text x="1130" y="714" text-anchor="middle" font-size="13" class="tile-title" fill="#6E522B">Freshness</text>
+      <text x="1130" y="738" text-anchor="middle" font-size="11" class="ink">Flags stale docs.</text>
+      <text x="1130" y="754" text-anchor="middle" font-size="11" class="ink">Nudges owners</text>
+      <text x="1130" y="770" text-anchor="middle" font-size="11" class="ink">to review.</text>
+    </g>
+  </g>
+
+  <!-- =========================================================
+       FLOW ARROWS (between bands)
+       ========================================================= -->
+  <!-- Flow channel x: 178 -->
+  <g id="flow-arrows">
+    <line x1="178" y1="194" x2="178" y2="238" stroke="#A84B2F" stroke-width="2.4" marker-end="url(#arrow-terra)" class="flow-arrow"/>
+    <text x="186" y="220" class="arrow-lbl">raw docs</text>
+
+    <line x1="178" y1="322" x2="178" y2="368" stroke="#A84B2F" stroke-width="2.4" marker-end="url(#arrow-terra)" class="flow-arrow"/>
+    <text x="186" y="350" class="arrow-lbl">safe chunks</text>
+
+    <!-- Mesh <-> Agents (bidirectional) -->
+    <line x1="178" y1="472" x2="178" y2="508" stroke="#01696F" stroke-width="2.4" marker-end="url(#arrow-teal)" marker-start="url(#arrow-teal-back)" class="flow-arrow"/>
+    <text x="186" y="494" class="arrow-lbl">retrieve · enrich</text>
+
+    <!-- Agents -> Access -->
+    <line x1="178" y1="612" x2="178" y2="648" stroke="#01696F" stroke-width="2.4" marker-end="url(#arrow-teal)" class="flow-arrow"/>
+    <text x="186" y="634" class="arrow-lbl">cited answer</text>
+
+    <!-- Access <-> Users -->
+    <line x1="178" y1="712" x2="178" y2="748" stroke="#01696F" stroke-width="2.4" marker-end="url(#arrow-teal)" marker-start="url(#arrow-teal-back)" class="flow-arrow"/>
+    <text x="186" y="734" class="arrow-lbl">ask · approve</text>
+  </g>
+
+  <!-- =========================================================
+       FLOWING DATA PACKETS — terra packets going UP through ingest+mesh
+       teal packets going UP through agents+access (answer side)
+       ========================================================= -->
+
+  <!-- Packet path: from sources up through ingest, mesh, then over to agents.
+       We use multiple offset packets to create a continuous stream feel. -->
+
+  <!-- Stream A: source -> ingest -> mesh -->
+  <use href="#packet-terra">
+    <animateMotion dur="6s" repeatCount="indefinite" rotate="0"
+      path="M 178,194 L 178,238 L 178,322 L 178,368"/>
+  </use>
+  <use href="#packet-terra">
+    <animateMotion dur="6s" begin="2s" repeatCount="indefinite" rotate="0"
+      path="M 178,194 L 178,238 L 178,322 L 178,368"/>
+  </use>
+  <use href="#packet-terra">
+    <animateMotion dur="6s" begin="4s" repeatCount="indefinite" rotate="0"
+      path="M 178,194 L 178,238 L 178,322 L 178,368"/>
+  </use>
+
+  <!-- Stream B: mesh -> agents -> access -> users (the "answer" stream) -->
+  <use href="#packet-teal">
+    <animateMotion dur="6s" repeatCount="indefinite" rotate="0"
+      path="M 178,472 L 178,508 L 178,612 L 178,648 L 178,712 L 178,748"/>
+  </use>
+  <use href="#packet-teal">
+    <animateMotion dur="6s" begin="2s" repeatCount="indefinite" rotate="0"
+      path="M 178,472 L 178,508 L 178,612 L 178,648 L 178,712 L 178,748"/>
+  </use>
+  <use href="#packet-teal">
+    <animateMotion dur="6s" begin="4s" repeatCount="indefinite" rotate="0"
+      path="M 178,472 L 178,508 L 178,612 L 178,648 L 178,712 L 178,748"/>
+  </use>
+
+  <!-- Stream C: tiny packets flowing through the 4 INGEST steps (left -> right) -->
+  <use href="#packet-terra">
+    <animateMotion dur="4s" repeatCount="indefinite" rotate="0"
+      path="M 230,280 L 380,280 L 430,280 L 580,280 L 630,280 L 780,280 L 830,280 L 970,280"/>
+  </use>
+  <use href="#packet-terra">
+    <animateMotion dur="4s" begin="1.3s" repeatCount="indefinite" rotate="0"
+      path="M 230,280 L 380,280 L 430,280 L 580,280 L 630,280 L 780,280 L 830,280 L 970,280"/>
+  </use>
+  <use href="#packet-terra">
+    <animateMotion dur="4s" begin="2.6s" repeatCount="indefinite" rotate="0"
+      path="M 230,280 L 380,280 L 430,280 L 580,280 L 630,280 L 780,280 L 830,280 L 970,280"/>
+  </use>
+
+  <!-- =========================================================
+       AGENTS CALL MODELS — dotted vertical line in the right gutter
+       ========================================================= -->
+  <line x1="1004" y1="610" x2="1004" y2="832" stroke="#1B474D" stroke-width="1.4"
+        stroke-dasharray="3 4" marker-end="url(#arrow-model)" opacity="0.85"/>
+  <text x="1010" y="720" font-size="11" fill="#1B474D" font-style="italic"
+        transform="rotate(90 1010 720)">agents call models</text>
+
+  <!-- Small token packets going DOWN from agents to model layer (cost flow) -->
+  <use href="#packet-teal">
+    <animateMotion dur="3.5s" repeatCount="indefinite" rotate="0"
+      path="M 1004,610 L 1004,832"/>
+  </use>
+  <use href="#packet-teal">
+    <animateMotion dur="3.5s" begin="1.7s" repeatCount="indefinite" rotate="0"
+      path="M 1004,610 L 1004,832"/>
+  </use>
+
+  <!-- =========================================================
+       GOVERNANCE -> CORE connectors (dashed, gentle)
+       ========================================================= -->
+  <g id="gov-connectors" opacity="0.55">
+    <line x1="1020" y1="156" x2="1000" y2="156" stroke="#6E522B" stroke-width="1" stroke-dasharray="3 3" marker-start="url(#arrow-gov)"/>
+    <line x1="1020" y1="280" x2="1000" y2="280" stroke="#6E522B" stroke-width="1" stroke-dasharray="3 3" marker-start="url(#arrow-gov)"/>
+    <line x1="1020" y1="420" x2="1000" y2="420" stroke="#6E522B" stroke-width="1" stroke-dasharray="3 3" marker-start="url(#arrow-gov)"/>
+    <line x1="1020" y1="560" x2="1000" y2="560" stroke="#6E522B" stroke-width="1" stroke-dasharray="3 3" marker-start="url(#arrow-gov)"/>
+    <line x1="1020" y1="680" x2="1000" y2="680" stroke="#6E522B" stroke-width="1" stroke-dasharray="3 3" marker-start="url(#arrow-gov)"/>
+    <line x1="1020" y1="780" x2="1000" y2="780" stroke="#6E522B" stroke-width="1" stroke-dasharray="3 3" marker-start="url(#arrow-gov)"/>
+  </g>
+
+  <!-- =========================================================
+       LEFT-EDGE STEP NUMBERS
+       ========================================================= -->
+  <g id="step-numbers">
+    <circle cx="22" cy="156" r="13" fill="#A84B2F"/>
+    <text x="22" y="161" text-anchor="middle" font-size="13" font-weight="700" fill="#ffffff">1</text>
+
+    <circle cx="22" cy="280" r="13" fill="#A84B2F"/>
+    <text x="22" y="285" text-anchor="middle" font-size="13" font-weight="700" fill="#ffffff">2</text>
+
+    <circle cx="22" cy="420" r="13" fill="#A84B2F"/>
+    <text x="22" y="425" text-anchor="middle" font-size="13" font-weight="700" fill="#ffffff">3</text>
+
+    <circle cx="22" cy="560" r="13" fill="#A84B2F"/>
+    <text x="22" y="565" text-anchor="middle" font-size="13" font-weight="700" fill="#ffffff">4</text>
+
+    <circle cx="22" cy="680" r="13" fill="#A84B2F"/>
+    <text x="22" y="685" text-anchor="middle" font-size="13" font-weight="700" fill="#ffffff">5</text>
+
+    <circle cx="22" cy="780" r="13" fill="#A84B2F"/>
+    <text x="22" y="785" text-anchor="middle" font-size="13" font-weight="700" fill="#ffffff">6</text>
+  </g>
+
+  <!-- Footer note -->
+  <text x="630" y="905" text-anchor="middle" font-size="11" class="muted" font-style="italic">
+    Read top → bottom: raw documents enter at the top, are cleaned and indexed in the middle, become cited answers for users at the bottom.
+  </text>
+</svg>
