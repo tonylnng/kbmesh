@@ -9,8 +9,12 @@ phased roadmap (P1 / P2 / P3 / Backlog) and lets you export the result as CSV.
 
 ## Features
 
-- 45 AI features across 6 categories — Ingestion Intelligence, Retrieval &
-  Answering, Agentic Workflows, Graph-Native, Governance & Trust, Future / Optional
+- 71 features across 7 categories — Ingestion Intelligence, Retrieval &
+  Answering, Agentic Workflows, Graph-Native, Access Control & Identity,
+  Governance & Trust, Future / Optional
+- Access Control & Identity and the newer Governance items are sourced from
+  [KBMesh Design v0.4](../../docs/KBMesh-Design-v0.4-Access-Control.md)
+  (multi-department access control, classification, audit)
 - Per-feature sliders (1–5) for value / effort / dependency
 - Adjustable global weights for the three dimensions
 - Three views: **Score** (cards by category), **Ranked list** (sortable table),

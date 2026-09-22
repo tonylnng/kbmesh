@@ -11,6 +11,7 @@ export type Category =
   | 'retrieval'
   | 'agentic'
   | 'graph'
+  | 'access'
   | 'governance'
   | 'future'
 
@@ -49,6 +50,11 @@ export const CATEGORY_META: Record<
     label: 'Graph-Native',
     subtitle: 'Differentiators that only work because you have the mesh',
     color: '#D19900'
+  },
+  access: {
+    label: 'Access Control & Identity',
+    subtitle: 'Who may see what — departments, grades, labels, compartments',
+    color: '#2F4B7C'
   },
   governance: {
     label: 'Governance & Trust',
@@ -446,6 +452,217 @@ export const FEATURES: FeatureMeta[] = [
     dependency: 2
   },
 
+  // ---- ACCESS CONTROL & IDENTITY (design v0.4) ----
+  {
+    id: 'identity-broker',
+    name: 'Verified identity at the gateway',
+    description:
+      'OIDC / mTLS token verification replaces client-asserted caller_context.role, which any agent could spoof. Prerequisite for every other access feature.',
+    category: 'access',
+    onPrem: true,
+    effort: 3,
+    value: 5,
+    dependency: 4
+  },
+  {
+    id: 'dir-sync',
+    name: 'Directory sync — dept, grade, role',
+    description:
+      'Pull department tree, grade band, roles and manager from Entra ID / LDAP / HRIS so KBMesh never masters HR truth. Offboarding makes grants inert within one cycle.',
+    category: 'access',
+    onPrem: true,
+    effort: 2,
+    value: 5,
+    dependency: 3
+  },
+  {
+    id: 'five-axis-labels',
+    name: 'Five-axis classification schema',
+    description:
+      'Replace the single category string with owner department, multi-label category, nature, sensitivity L0–L4 and scope tags. Unlabelled content is quarantined, not public.',
+    category: 'access',
+    onPrem: true,
+    effort: 3,
+    value: 5,
+    dependency: 4
+  },
+  {
+    id: 'nature-rules',
+    name: 'Nature-driven handling rules',
+    description:
+      'Each artifact nature (policy, contract, payroll, personal_data, legal_advice…) carries default sensitivity, a floor, forced compartments, quoting policy and retention class.',
+    category: 'access',
+    onPrem: true,
+    effort: 2,
+    value: 4,
+    dependency: 3
+  },
+  {
+    id: 'abac-pdp',
+    name: 'ABAC policy engine (policy-as-data)',
+    description:
+      'Versioned permit/deny rules over subject × resource × context with deny-overrides, compiled once and enforced at every point — no second implementation to drift.',
+    category: 'access',
+    onPrem: true,
+    effort: 4,
+    value: 5,
+    dependency: 5
+  },
+  {
+    id: 'predicate-pushdown',
+    name: 'Authorize before retrieval (predicate pushdown)',
+    description:
+      'Compile the permit rule into the SQL / ANN filter so forbidden chunks never enter the context window. Replaces egress-time redaction as the access boundary.',
+    category: 'access',
+    onPrem: true,
+    effort: 4,
+    value: 5,
+    dependency: 5
+  },
+  {
+    id: 'rls-backstop',
+    name: 'Postgres RLS fail-closed backstop',
+    description:
+      'Row-level security on nodes, chunks and edges keyed to the session subject, so an application bug fails closed at the database instead of leaking.',
+    category: 'access',
+    onPrem: true,
+    effort: 2,
+    value: 4,
+    dependency: 3
+  },
+  {
+    id: 'chunk-acl',
+    name: 'Chunk-level ACL and masked spans',
+    description:
+      'A tender can be L1 in its summary and L3 in its pricing annex. Authorize chunks, not files, and mask labelled spans per role at ingest rather than by regex at query time.',
+    category: 'access',
+    onPrem: true,
+    effort: 3,
+    value: 4,
+    dependency: 4
+  },
+  {
+    id: 'compartments',
+    name: 'Compartment isolation (namespace + KEK)',
+    description:
+      'Payroll, employee relations, legal privilege, live bids and per-client content get their own vector namespace, graph and encryption key, with cross-compartment fusion blocked.',
+    category: 'access',
+    onPrem: true,
+    effort: 4,
+    value: 4,
+    dependency: 5
+  },
+  {
+    id: 'acl-graph-walk',
+    name: 'ACL-aware mesh traversal',
+    description:
+      'Prune edges whose far endpoint is denied, label entities extracted from restricted docs, and treat relation types as content — the mesh is where most designs leak.',
+    category: 'access',
+    onPrem: true,
+    effort: 3,
+    value: 5,
+    dependency: 5
+  },
+  {
+    id: 'label-propagation',
+    name: 'Derived-label propagation (high-water mark)',
+    description:
+      'Summaries, tags, entities, edges, embeddings, cached answers and conversation history inherit the strictest label of their sources. Vectors are content too.',
+    category: 'access',
+    onPrem: true,
+    effort: 2,
+    value: 5,
+    dependency: 4
+  },
+  {
+    id: 'response-profiles',
+    name: 'Grade response profiles',
+    description:
+      'Per grade × nature × channel: quoting rights, numeric precision, citation detail, length and tone. Presentation only — it never sees unauthorised content.',
+    category: 'access',
+    onPrem: true,
+    effort: 3,
+    value: 4,
+    dependency: 3
+  },
+  {
+    id: 'channel-assurance',
+    name: 'Channel and device assurance caps',
+    description:
+      'Effective ceiling = min(grade, role, channel, device posture). The same person asking from WhatsApp gets L1 only, declaratively rather than by hand-written checks.',
+    category: 'access',
+    onPrem: true,
+    effort: 2,
+    value: 4,
+    dependency: 3
+  },
+  {
+    id: 'disclosure-modes',
+    name: 'Existence disclosure + access requests',
+    description:
+      'Per-tier full / metadata / count-only / silent disclosure, with kb.request_access routing a time-boxed request and the triggering question to the owning steward.',
+    category: 'access',
+    onPrem: true,
+    effort: 2,
+    value: 4,
+    dependency: 3
+  },
+  {
+    id: 'persona-simulator',
+    name: 'Persona simulator',
+    description:
+      '"What would a G2 in Sales see for this question?" — shows the exact evidence set and shaped answer. The acceptance-test surface for the conformance matrix.',
+    category: 'access',
+    onPrem: true,
+    effort: 2,
+    value: 4,
+    dependency: 3
+  },
+  {
+    id: 'policy-studio',
+    name: 'Policy studio with dry-run diff',
+    description:
+      'Visual rule builder over the five axes that previews the blast radius — "this change grants 412 more documents to 37 people" — before activation, with atomic rollback.',
+    category: 'access',
+    onPrem: true,
+    effort: 4,
+    value: 4,
+    dependency: 4
+  },
+  {
+    id: 'access-reviews',
+    name: 'Access review campaigns',
+    description:
+      'Quarterly steward attestation per department with auto-revoke of un-attested grants, plus nightly reconciliation against the directory to catch orphaned access.',
+    category: 'access',
+    onPrem: true,
+    effort: 3,
+    value: 4,
+    dependency: 3
+  },
+  {
+    id: 'break-glass',
+    name: 'Break-glass emergency access',
+    description:
+      'Two-person approval, ≤4-hour TTL, scoped node set, banner on every response, mandatory review ticket and an audit entry that cannot be suppressed.',
+    category: 'access',
+    onPrem: true,
+    effort: 2,
+    value: 3,
+    dependency: 2
+  },
+  {
+    id: 'classification-workbench',
+    name: 'Classification workbench',
+    description:
+      'Steward queue for quarantined content by department: bulk relabel, confidence heatmap, backlog SLAs, and justified downgrades requiring a second approver.',
+    category: 'access',
+    onPrem: true,
+    effort: 3,
+    value: 4,
+    dependency: 3
+  },
+
   // ---- GOVERNANCE ----
   {
     id: 'audit-trail',
@@ -511,6 +728,84 @@ export const FEATURES: FeatureMeta[] = [
     onPrem: true,
     effort: 3,
     value: 3,
+    dependency: 3
+  },
+
+  {
+    id: 'audit-chain',
+    name: 'Hash-chained append-only audit',
+    description:
+      'Three streams (query, access decision, administration) with prev_hash chaining and signed daily anchors, plus INSERT-only rules so silent edits are detectable.',
+    category: 'governance',
+    onPrem: true,
+    effort: 3,
+    value: 5,
+    dependency: 2
+  },
+  {
+    id: 'access-decision-log',
+    name: 'Per-node allow/deny decision log',
+    description:
+      'One row per node or chunk considered, recording the deciding rule and whether it was served — the record that answers "who saw what", including denials.',
+    category: 'governance',
+    onPrem: true,
+    effort: 2,
+    value: 5,
+    dependency: 3
+  },
+  {
+    id: 'pit-entitlement',
+    name: 'Point-in-time entitlement reconstruction',
+    description:
+      'Versioned memberships and grants answer "as of 14 March, who could read this document?" and "what could this person reach while employed?" — the questions auditors ask.',
+    category: 'governance',
+    onPrem: true,
+    effort: 3,
+    value: 4,
+    dependency: 4
+  },
+  {
+    id: 'anomaly-inbox',
+    name: 'Access anomaly detection',
+    description:
+      'Volume and breadth spikes vs. baseline, repeated denials, sensitivity climbing, off-hours low-assurance access, orphan grants — surfaced as cases with one-click suspend.',
+    category: 'governance',
+    onPrem: true,
+    effort: 3,
+    value: 4,
+    dependency: 3
+  },
+  {
+    id: 'aggregation-guards',
+    name: 'Aggregation and probing guards',
+    description:
+      'Minimum-cohort rule for aggregate answers, per-subject query budgets by tier, and constant-time behaviour on compartmented misses so timing is not an oracle.',
+    category: 'governance',
+    onPrem: true,
+    effort: 2,
+    value: 4,
+    dependency: 3
+  },
+  {
+    id: 'explain-access',
+    name: 'Explain access',
+    description:
+      '"Why did I see this — or not?" states the deciding rule in plain language for users, and resolves the full authorised subject list for stewards.',
+    category: 'governance',
+    onPrem: true,
+    effort: 2,
+    value: 4,
+    dependency: 3
+  },
+  {
+    id: 'evidence-pack',
+    name: 'Audit evidence pack export',
+    description:
+      'Signed bundle for a date range: policy set, grants, decisions and chain verification — the artifact handed to internal audit or a PDPO enquiry.',
+    category: 'governance',
+    onPrem: true,
+    effort: 2,
+    value: 4,
     dependency: 3
   },
 
